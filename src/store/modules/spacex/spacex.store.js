@@ -40,13 +40,16 @@ const actions = {
    * Get all launches list from SpaceX sorterd by latest date first.
    *
    * @param {*} : commit for store
+   * @param {*} : upcoming request or completed requ3est
+   * @param {*} : pagination current page counter
    */
-  async getLaunchesSortedByLaunchDateDesc({ commit }) {
-    console.log('------------ SpaceX Store: Action: getLaunchesSortedByLaunchDateDesc -----------');
+  async getLaunchesSortedByLaunchDateDesc({ commit }, { isCompletedLaunches, paginationCounter }) {
+    console.log('------------ SpaceX Store: Action: getLaunchesSortedByLaunchDateDesc -----------', isCompletedLaunches, ' : ', paginationCounter);
     commit('loadingRequest');
     try {
       console.log('------------ SpaceX Store: Action: getLaunchesSortedByLaunchDateDesc Start -----------');
-      return await SpaceXService.getLaunchesSortedByLaunchDateDesc();
+      return await SpaceXService
+        .getLaunchesSortedByLaunchDateDesc(isCompletedLaunches, paginationCounter);
     } catch (e) {
       commit('unLoadingRequest');
       if (e instanceof Error) {

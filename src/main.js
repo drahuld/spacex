@@ -20,7 +20,6 @@ Vue.mixin({
       return Object.keys(object).length > 0;
     },
     isArrayNotEmpty(arrayObject) {
-      console.log('arrayObjectarrayObject : ', arrayObject.length > 0);
       return arrayObject.length > 0;
     },
   },

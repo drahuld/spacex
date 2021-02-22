@@ -25,12 +25,15 @@ const SpaceXService = {
     return data;
   },
 
-  async getLaunchesSortedByLaunchDateDesc() {
-    console.log('*** SpaceXService: getLaunchesSortedByLaunchDateDesc Request *** : ');
+  async getLaunchesSortedByLaunchDateDesc(isCompletedLaunches, paginationCounter) {
+    console.log('*** SpaceXService: getLaunchesSortedByLaunchDateDesc Request *** : ', isCompletedLaunches, ' : ', paginationCounter);
     const sortingRequestBody = {
-      query: {},
+      query: {
+        upcoming: !isCompletedLaunches,
+      },
       options: {
-        pagination: false,
+        page: paginationCounter,
+        pagination: true,
         sort: {
           date_local: 'desc',
         },

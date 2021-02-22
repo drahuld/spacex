@@ -12,8 +12,8 @@
       </v-col>
     </v-row>
     <v-item-group>
-    <v-item
-      v-for="(completedLaunchItem, index) in switchToSelectedLaunchesList"
+    <v-item id="infinite-list"
+      v-for="(completedLaunchItem, index) in launchesList"
       :key="completedLaunchItem.id">
       <v-timeline-item
         :color="completedLaunchItem.color"
@@ -34,7 +34,7 @@
                           :src="completedLaunchItem.links.patch.large"
                           :alt="completedLaunchItem.name"/>
                         <img
-                          v-if="isEmpty(completedLaunchItem.links.patch.large)"
+                          v-else
                           :src="require('@/assets/launchImageNotAvailable.png')"
                           :alt="completedLaunchItem.name"/>
                       </v-avatar>
@@ -94,12 +94,12 @@
               <v-col class="hidden-sm-and-down text-right" md="2">
                 <v-icon size="64"> mdi-calendar-text </v-icon>
               </v-col>
-               <v-col cols="12" md="12" v-if="isObjectNotEmpty(completedLaunchItem.rocket)">
+                <v-col cols="12" md="12" v-if="isObjectNotEmpty(completedLaunchItem.rocket)">
                   <ExpandGrid subType="ROCKET" :data="completedLaunchItem.rocket" />
-               </v-col>
-               <v-col cols="12" md="12" v-if="isArrayNotEmpty(completedLaunchItem.crew)">
+                </v-col>
+                <v-col cols="12" md="12" v-if="isArrayNotEmpty(completedLaunchItem.crew)">
                   <ExpandGrid subType="CREW" :data="completedLaunchItem.crew" />
-               </v-col>
+                </v-col>
             </v-row>
           </v-container>
         </v-card>
@@ -117,8 +117,24 @@ import ExpandGrid from '@/components/common/ExpandGrid.vue';
 
 export default {
 
+  created() {
+
+  },
+
   async mounted() {
     this.setLaunchesAsPageTitle();
+
+    // Detect when scrolled to bottom.
+    window.onscroll = () => {
+      const bottomOfWindow = document.documentElement.scrollTop
+        + window.innerHeight === document.documentElement.offsetHeight;
+      if (bottomOfWindow) {
+        this.scrollPaginationCurrentCounter += 1;
+        console.log(' >>>>>>>>>>>>>>> ******** mountuing scrooll : ', bottomOfWindow);
+        this.loadAllSpaceXLaunchesSortedByLaunchDateDesc();
+      }
+    };
+    // Initially load some items.
     this.loadAllSpaceXLaunchesSortedByLaunchDateDesc();
   },
 
@@ -130,8 +146,8 @@ export default {
   data() {
     return {
       isCompletedLaunches: true,
-      upComingLaunchesList: [],
-      completedLaunchesList: [],
+      scrollPaginationCurrentCounter: 1,
+      launchesList: [],
       randomColorArray: [
         'teal lighten-1',
         'purple lighten-2',
@@ -155,9 +171,6 @@ export default {
 
   computed: {
 
-    switchToSelectedLaunchesList() {
-      return this.isCompletedLaunches ? this.completedLaunchesList : this.upComingLaunchesList;
-    },
   },
 
   methods: {
@@ -180,27 +193,17 @@ export default {
     },
 
     async loadAllSpaceXLaunchesSortedByLaunchDateDesc() {
-      const launchesResponse = await this.getLaunchesSortedByLaunchDateDesc();
-      // console.log('******** launchesResponse ******* :', launchesResponse);
-      if (!isEmpty(launchesResponse)) {
-        this.completedLaunchesList = launchesResponse
-          .filter((launch) => !launch.upcoming)
-          .map((launch) => ({
-            id: launch.id,
-            flight_number: launch.flight_number,
-            name: launch.name,
-            date: launch.date_local,
-            upcoming: launch.upcoming,
-            success: launch.success,
-            links: launch.links,
-            details: launch.details,
-            color: this.getRandormColor(),
-            rocket: launch.rocket,
-            crew: launch.crew,
-          }));
+      const launchesResponse = await this.getLaunchesSortedByLaunchDateDesc(
+        {
+          isCompletedLaunches: this.isCompletedLaunches,
+          paginationCounter: this.scrollPaginationCurrentCounter,
+        },
+      );
 
-        this.upComingLaunchesList = launchesResponse
-          .filter((launch) => launch.upcoming)
+      console.log('******** Existing list size ******* :', this.launchesList);
+      console.log('******** launchesResponse ******* :', launchesResponse);
+      if (!isEmpty(launchesResponse)) {
+        (this.launchesList).push(...launchesResponse
           .map((launch) => ({
             id: launch.id,
             flight_number: launch.flight_number,
@@ -210,15 +213,24 @@ export default {
             success: launch.success,
             links: launch.links,
             details: launch.details,
+            color: this.getRandormColor(),
             rocket: launch.rocket,
             crew: launch.crew,
-            color: this.getRandormColor(),
-          }));
+          })));
       }
-      console.log('****** completedLaunchesList Transformed **** : ', this.completedLaunchesList);
-      console.log('****** upComingLaunchesList Transformed **** : ', this.upComingLaunchesList);
+      console.log('****** launchesList Transformed **** : ', this.launchesList);
       this.setUnLoadingRequest();
     },
+  },
+
+  watch: {
+
+    isCompletedLaunches() {
+      console.log('****** Watch  isCompletedLaunches **** : ');
+      this.launchesList = [];
+      this.loadAllSpaceXLaunchesSortedByLaunchDateDesc();
+    },
+
   },
 };
 </script>
