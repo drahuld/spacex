@@ -14,6 +14,14 @@ Vue.prototype.$eventBus = new Vue();
 ApiService.init(process.env.VUE_APP_SPACEX_API_ENDPOINT);
 ApiService.setGlobalExceptionResponseHandler(Vue.prototype.$eventBus);
 
+Vue.mixin({
+  methods: {
+    isObjectEmpty(object) {
+      return Object.keys(object).length > 0;
+    },
+  },
+});
+
 new Vue({
   router,
   store,

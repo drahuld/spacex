@@ -56,6 +56,26 @@ const actions = {
     }
   },
 
+  /**
+   * Get all launches pad list from SpaceX.
+   *
+   * @param {*} : commit for store
+   */
+  async getLaunchesPads({ commit }) {
+    console.log('------------ SpaceX Store: Action: getLaunchesPads -----------');
+    commit('loadingRequest');
+    try {
+      console.log('------------ SpaceX Store: Action: getLaunchesPads Start -----------');
+      return await SpaceXService.getLaunchesPads();
+    } catch (e) {
+      commit('unLoadingRequest');
+      if (e instanceof Error) {
+        console.log('SpaceX-Store: getLaunchesPads : Exception : ', e);
+      }
+      return {};
+    }
+  },
+
 };
 
 export default {

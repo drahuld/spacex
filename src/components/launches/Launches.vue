@@ -94,6 +94,10 @@
               <v-col class="hidden-sm-and-down text-right" md="2">
                 <v-icon size="64"> mdi-calendar-text </v-icon>
               </v-col>
+               <v-col cols="12" md="12" v-if="isObjectEmpty(completedLaunchItem.rocket)">
+                  <ExpandGrid :data="completedLaunchItem.rocket"
+                      gridName="Rockets" />
+               </v-col>
             </v-row>
           </v-container>
         </v-card>
@@ -107,6 +111,7 @@ import { mapActions } from 'vuex';
 import Constants from '@/constants';
 import { isEmpty, random } from 'lodash';
 import ButtonList from '@/components/common/ButtonList.vue';
+import ExpandGrid from '@/components/common/ExpandGrid.vue';
 
 export default {
 
@@ -117,6 +122,7 @@ export default {
 
   components: {
     ButtonList,
+    ExpandGrid,
   },
 
   data() {
@@ -146,6 +152,7 @@ export default {
   },
 
   computed: {
+
     switchToSelectedLaunchesList() {
       return this.isCompletedLaunches ? this.completedLaunchesList : this.upComingLaunchesList;
     },
@@ -186,6 +193,7 @@ export default {
             links: launch.links,
             details: launch.details,
             color: this.getRandormColor(),
+            rocket: launch.rocket,
           }));
 
         this.upComingLaunchesList = launchesResponse
@@ -202,8 +210,7 @@ export default {
             color: this.getRandormColor(),
           }));
       }
-      // console.log('****** completedLaunchesList Transformed **** : ',
-      // this.completedLaunchesList);
+      console.log('****** completedLaunchesList Transformed **** : ', this.completedLaunchesList);
       // console.log('****** upComingLaunchesList Transformed **** : ', this.upComingLaunchesList);
       this.setUnLoadingRequest();
     },

@@ -45,14 +45,12 @@ export default {
           iconToolTip: key[0],
         });
       });
-      console.log('***** tesssss : ', others);
       return buttonArray;
     },
   },
 
   methods: {
     getIconFromType(name) {
-      console.log('******** getIconFromType :', name);
       let iconName = '';
       switch (name) {
         case 'presskit':

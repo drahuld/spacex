@@ -2,7 +2,7 @@
   <v-footer padless class="backgroundCss">
     <v-card style="min-width: 100%;" padless class="backgroundCss">
       <v-card-text>
-        <v-btn v-for="icon in icons" :key="icon.id" class="mx-4 white--text"
+        <v-btn v-for="icon in mapFooterPropsToIconObject" :key="icon.id" class="mx-4 white--text"
         icon :href="icon.link" target="_blank">
          <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
@@ -18,9 +18,7 @@
          <v-icon :color="iconColor">mdi-at</v-icon>{{ footerProps.address.address }},
         {{ footerProps.address.city }}, {{ footerProps.address.state }}
         </v-card-text>
-
       <v-divider></v-divider>
-
       <v-card-text class="white--text">
         {{ new Date().getFullYear() }}
         <v-icon small :color="iconColor">mdi-at</v-icon> <strong>{{ footerProps.name }}</strong>
@@ -38,26 +36,71 @@ export default {
     },
   },
 
+  computed: {
+
+    mapFooterPropsToIconObject() {
+      const buttonArray = [];
+
+      const {
+        links,
+      } = this.footerProps;
+
+      let counter = 0;
+      Object.entries(links).forEach((key) => {
+        buttonArray.push({
+          id: counter += 1,
+          name: this.getIconFromType(key[0]),
+          link: key[1],
+          toolTip: key[0],
+        });
+      });
+      console.log('******* buttonArray :', buttonArray);
+      return buttonArray;
+    },
+  },
+
+  methods: {
+    getIconFromType(name) {
+      let iconName = '';
+      switch (name) {
+        case 'website':
+          iconName = 'mdi-web';
+          break;
+        case 'flickr':
+          iconName = 'mdi-flickr';
+          break;
+        case 'twitter':
+          iconName = 'mdi-twitter';
+          break;
+        case 'elon_twitter':
+          iconName = 'mdi-twitter';
+          break;
+        default:
+          break;
+      }
+      return iconName;
+    },
+  },
+
   data() {
     return {
       iconColor: 'white',
       icons: [
         {
-          id: 1, name: 'mdi-web', link: this.footerProps.links.website, toolTip: 'SpaceX Website',
+          id: 1, name: '', link: this.footerProps.links.website, toolTip: '',
         },
         {
-          id: 2, name: 'mdi-flickr', link: this.footerProps.links.flickr, toolTip: 'SpaceX flickr',
+          id: 2, name: 'mdi-', link: this.footerProps.links.flickr, toolTip: 'SpaceX flickr',
         },
         {
-          id: 3, name: 'mdi-twitter', link: this.footerProps.links.twitter, toolTip: 'SpaceX twitter',
+          id: 3, name: 'mdi-', link: this.footerProps.links.twitter, toolTip: 'SpaceX twitter',
         },
         {
-          id: 4, name: 'mdi-twitter', link: this.footerProps.links.elon_twitter, toolTip: 'Elonmusk twitter',
+          id: 4, name: 'mdi-', link: this.footerProps.links.elon_twitter, toolTip: 'Elonmusk twitter',
         },
       ],
     };
   },
-  computed: {},
 };
 </script>
 <style scoped>
