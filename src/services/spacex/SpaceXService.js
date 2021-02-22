@@ -36,6 +36,7 @@ const SpaceXService = {
         },
         populate: [
           'rocket',
+          'crew',
         ],
       },
     };

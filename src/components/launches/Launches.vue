@@ -94,9 +94,11 @@
               <v-col class="hidden-sm-and-down text-right" md="2">
                 <v-icon size="64"> mdi-calendar-text </v-icon>
               </v-col>
-               <v-col cols="12" md="12" v-if="isObjectEmpty(completedLaunchItem.rocket)">
-                  <ExpandGrid :data="completedLaunchItem.rocket"
-                      gridName="Rockets" />
+               <v-col cols="12" md="12" v-if="isObjectNotEmpty(completedLaunchItem.rocket)">
+                  <ExpandGrid subType="ROCKET" :data="completedLaunchItem.rocket" />
+               </v-col>
+               <v-col cols="12" md="12" v-if="isArrayNotEmpty(completedLaunchItem.crew)">
+                  <ExpandGrid subType="CREW" :data="completedLaunchItem.crew" />
                </v-col>
             </v-row>
           </v-container>
@@ -194,6 +196,7 @@ export default {
             details: launch.details,
             color: this.getRandormColor(),
             rocket: launch.rocket,
+            crew: launch.crew,
           }));
 
         this.upComingLaunchesList = launchesResponse
@@ -207,11 +210,13 @@ export default {
             success: launch.success,
             links: launch.links,
             details: launch.details,
+            rocket: launch.rocket,
+            crew: launch.crew,
             color: this.getRandormColor(),
           }));
       }
       console.log('****** completedLaunchesList Transformed **** : ', this.completedLaunchesList);
-      // console.log('****** upComingLaunchesList Transformed **** : ', this.upComingLaunchesList);
+      console.log('****** upComingLaunchesList Transformed **** : ', this.upComingLaunchesList);
       this.setUnLoadingRequest();
     },
   },

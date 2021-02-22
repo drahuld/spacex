@@ -1,7 +1,7 @@
 <template>
   <v-card pa-0 ma-0 color="teal darken-3" dark>
     <v-card-actions>
-      <v-btn color="white dark-2" text> {{ gridName }} </v-btn>
+      <v-btn color="white dark-2" text> {{ subType }} </v-btn>
       <v-spacer></v-spacer>
       <v-btn icon @click="show = !show">
         <v-icon>{{ show ? "mdi-chevron-up" : "mdi-chevron-down" }}</v-icon>
@@ -9,28 +9,32 @@
     </v-card-actions>
     <v-expand-transition>
       <div v-show="show">
-        <Carousel :componentImageArray="fetchComponentImagesArray" />
-        <v-card>
-          <v-card-title
-            >{{ data.name }}
+        <Carousel :subType="subType" :componentArray="fetchComponentImagesArray" />
+        <v-card v-if="subType === this.ROCKET">
+          <v-card-title>{{ data.name }}
             <ToolTip
               :color="data.active ? 'green' : 'gray'"
-              icon="mdi-rocket"
-              :tooltip="data.active ? 'Status is active' : 'Status is inactive'"
-            />
+              :icon="getIconBySubType"
+              :tooltip="data.active ? 'Status is active' : 'Status is inactive'"/>
           </v-card-title>
           <v-divider dark></v-divider>
           <v-card-text class="text-left">
-                <div class="overline mb-4 font-weight-bold">{{ data.name }} Details:</div>
-                <v-row width="100%" v-for="(data) in convertObjectIntoArray"
-                    :key="data.key">
-                  <v-col cols="12" md="4" class="font-weight-bold" >
-                      {{ data.key | toUppercase }}
-                  </v-col>
-                  <v-col cols="12" md="8">
-                      {{ JSON.stringify(data.value)  }}
-                  </v-col>
-                </v-row>
+            <div class="overline mb-4 font-weight-bold">
+              {{ data.name }} Details:
+            </div>
+            <div>
+              <v-row
+                width="100%"
+                v-for="details in convertObjectIntoArray"
+                :key="details.key">
+                <v-col cols="12" md="4" class="font-weight-bold">
+                  {{ details.key | toUppercase }}
+                </v-col>
+                <v-col cols="12" md="8">
+                  {{ details.value }}
+                </v-col>
+              </v-row>
+            </div>
           </v-card-text>
         </v-card>
       </div>
@@ -44,13 +48,13 @@ import ToolTip from '@/components/common/ToolTip.vue';
 
 export default {
   props: {
-    data: {
-      type: Object,
+    subType: {
+      type: String,
       required: true,
     },
 
-    gridName: {
-      type: String,
+    data: {
+      type: [Object, Array],
       required: true,
     },
   },
@@ -63,24 +67,51 @@ export default {
   data() {
     return {
       show: false,
+      CREW: 'CREW',
+      ROCKET: 'ROCKET',
     };
   },
 
   computed: {
-
     convertObjectIntoArray() {
       const {
-        id, engines,
-        // eslint-disable-next-line camelcase
-        first_stage, flickr_images, second_stage, ...others
+        id,
+        engines,
+        first_stage: firstStage,
+        payload_weights: payloadWeights,
+        flickr_images: flickrImg,
+        second_stage: secoStage,
+        ...others
       } = this.data;
-
       return Object.entries(others).map(([key, value]) => ({ key, value }));
     },
 
+    getIconBySubType() {
+      switch (this.subType) {
+        case this.ROCKET:
+          return 'mdi-rocket';
+        case this.CREW:
+          return 'mdi-account-multiple';
+        default:
+          break;
+      }
+      return '';
+    },
+
     fetchComponentImagesArray() {
-      const { flickr_images: flickrImages = [] } = this.data;
-      return flickrImages;
+      switch (this.subType) {
+        case this.ROCKET: {
+          // eslint-disable-next-line no-case-declarations
+          const { flickr_images: flickrImages = [] } = this.data;
+          return flickrImages;
+        }
+        case this.CREW:
+          console.log('>>>>>>>>>>> ', this.data);
+          return this.data;
+        default:
+          break;
+      }
+      return [];
     },
   },
 };
