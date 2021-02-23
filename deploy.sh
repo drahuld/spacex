@@ -9,6 +9,6 @@ cp index.html 404.html
 
 git init
 git add -A
-git commit -m 'deploy'
+git commit -m 'deploy to gh-pages'
 git push -f git@github.com:drahuld/spacex.git main:gh-pages
 cd -
