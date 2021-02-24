@@ -34,7 +34,9 @@
 
 <script>
 import { mapActions } from 'vuex';
-import { mapValues, groupBy, omit } from 'lodash';
+import {
+  isEmpty, mapValues, groupBy, omit,
+} from 'lodash';
 import Constants from '@/constants';
 import BarChart from '@/components/common/BarChart.vue';
 import LaunchesMixin from '@/mixins/LaunchesMixin.vue';
@@ -77,26 +79,38 @@ export default {
 
         console.log(' ******* Home : grouped ', grouped);
 
-        const backgroundColorArray = [];
+        if (!isEmpty(grouped)) {
+          const backgroundColorArray = [];
 
-        const charLabelArray = Object.keys(grouped);
+          const charLabelArray = Object.keys(grouped);
 
-        for (let i = 0; i < charLabelArray.length; i += 1) {
-          backgroundColorArray.push(this.getRandormColor(this.randomColorForChart));
+          for (let i = 0; i < charLabelArray.length; i += 1) {
+            if (charLabelArray && (charLabelArray.length < (this.randomColorForChart).length)) {
+              let colorStr = this.getRandormColor(this.randomColorForChart);
+              console.log('***** Color Previous : ', colorStr);
+              while (backgroundColorArray.includes(colorStr)) {
+                console.log('***** Color Exist : ', backgroundColorArray, ' : ', colorStr);
+                colorStr = this.getRandormColor(this.randomColorForChart);
+              }
+              backgroundColorArray.push(colorStr);
+            } else {
+              backgroundColorArray.push(this.getRandormColor(this.randomColorForChart));
+            }
+          }
+
+          const initiChartObject = { labels: charLabelArray };
+          const initialChartDataSet = { label: this.isCompletedLaunches ? 'Past Launches' : 'Upcoming Launches' };
+          const prepareDatasetsObject = {
+            ...initialChartDataSet,
+            backgroundColor: backgroundColorArray,
+            data: Object.values(grouped).map((launch) => launch.length),
+          };
+
+          return {
+            ...initiChartObject,
+            datasets: [prepareDatasetsObject],
+          };
         }
-
-        const initiChartObject = { labels: charLabelArray };
-        const initialChartDataSet = { label: this.isCompletedLaunches ? 'Past Launches' : 'Upcoming Launches' };
-        const prepareDatasetsObject = {
-          ...initialChartDataSet,
-          backgroundColor: backgroundColorArray,
-          data: Object.values(grouped).map((launch) => launch.length),
-        };
-
-        return {
-          ...initiChartObject,
-          datasets: [prepareDatasetsObject],
-        };
       }
       return {};
     },
