@@ -15,8 +15,7 @@
         :key="crew.id"
         reverse-transition="fade-transition"
         transition="fade-transition">
-        <v-sheet color="black" height="100%" tile>
-          <v-row class="fill-height" align="center" justify="center">
+        <v-sheet color="black" height="100%">
             <v-list-item three-line>
               <v-list-item-content>
                 <div class="overline mb-4">CREW</div>
@@ -30,11 +29,10 @@
                 <v-list-item-subtitle>
                   {{ crew.wikipedia }}</v-list-item-subtitle>
               </v-list-item-content>
-              <v-list-item-avatar tile size="450">
+              <v-list-item-avatar tile size="350">
                 <v-img height="100%" :src="crew.image"></v-img>
               </v-list-item-avatar>
             </v-list-item>
-          </v-row>
         </v-sheet>
       </v-carousel-item>
     </v-carousel>

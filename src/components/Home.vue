@@ -7,9 +7,19 @@
       <v-card-text>
         <span
           >Open Source REST API for launch, rocket, core, capsule, starlink,
-          launchpad, and landing pad data.</span>
+          launchpad, and landing pad data.</span
+        >
       </v-card-text>
       <v-card-text>
+        <v-switch
+          left
+          v-model="isCompletedLaunches"
+          inset
+          :label="
+            isCompletedLaunches ? 'Completed Launches' : 'Upcoming Launches'" ></v-switch>
+
+          <BarChart v-if="isChartDataLoaded" :chartData="calculatePieChartForRocketLaunchesData" />
+
         <span
           >We are not affiliated, associated, authorized, endorsed by, or in any
           way officially connected with Space Exploration Technologies Corp
@@ -24,11 +34,23 @@
 
 <script>
 import { mapActions } from 'vuex';
+import { mapValues, groupBy, omit } from 'lodash';
 import Constants from '@/constants';
+import BarChart from '@/components/common/BarChart.vue';
+import LaunchesMixin from '@/mixins/LaunchesMixin.vue';
 
 export default {
-  mounted() {
+  mixins: [LaunchesMixin],
+
+  components: {
+    BarChart,
+  },
+
+  async mounted() {
     this.setHomeAsPageTitle();
+    this.scrollPaginationCurrentCounter = 0;
+    // Load all items for home page.
+    await this.loadAllSpaceXLaunchesSortedByLaunchDateDesc();
   },
 
   data() {
@@ -44,6 +66,59 @@ export default {
       this.setPageTitle(this.SPACEX_HOME_CONSTANTS);
     },
   },
+
+  computed: {
+
+    calculatePieChartForRocketLaunchesData() {
+      console.log(' ******* Home : this.launchesList ', this.launchesList);
+      if (this.launchesList) {
+        const grouped = mapValues(groupBy(this.launchesList, 'rocket.name'),
+          (clist) => clist.map((launch) => omit(launch, 'rocket.name')));
+
+        console.log(' ******* Home : grouped ', grouped);
+
+        const backgroundColorArray = [];
+
+        const charLabelArray = Object.keys(grouped);
+
+        for (let i = 0; i < charLabelArray.length; i += 1) {
+          backgroundColorArray.push(this.getRandormColor(this.randomColorForChart));
+        }
+
+        const initObject = { labels: [...charLabelArray] };
+        // this.$set(initObject, 'labels', charLabelArray);
+        const initialDataSet = { label: `Launch per rocket for ${this.isCompletedLaunches}` ? 'Past Launches' : 'Upcoming Launches' };
+        const prepareDatasetsObject = {
+          ...initialDataSet,
+          backgroundColor: [...backgroundColorArray],
+          data: [...Object.values(grouped).map((launch) => launch.length)],
+        };
+
+        return {
+          ...initObject,
+          datasets: [prepareDatasetsObject],
+        };
+      }
+      return {};
+    },
+
+  },
+
+  watch: {
+
+    isCompletedLaunches() {
+      console.log('****** Watch  isCompletedLaunches **** : ');
+      this.launchesList = [];
+      this.scrollPaginationCurrentCounter = 0;
+      this.loadAllSpaceXLaunchesSortedByLaunchDateDesc();
+    },
+
+    calculatePieChartForRocketLaunchesData() {
+      this.isChartDataLoaded = true;
+    },
+
+  },
+
 };
 </script>
 <style scoped>

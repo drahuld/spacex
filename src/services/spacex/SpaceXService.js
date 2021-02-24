@@ -33,7 +33,7 @@ const SpaceXService = {
       },
       options: {
         page: paginationCounter,
-        pagination: true,
+        pagination: (paginationCounter > 0),
         sort: {
           date_local: 'desc',
         },

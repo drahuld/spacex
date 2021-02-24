@@ -111,15 +111,14 @@
 <script>
 import { mapActions } from 'vuex';
 import Constants from '@/constants';
-import { isEmpty, random } from 'lodash';
+import { isEmpty } from 'lodash';
 import ButtonList from '@/components/common/ButtonList.vue';
 import ExpandGrid from '@/components/common/ExpandGrid.vue';
+import LaunchesMixin from '@/mixins/LaunchesMixin.vue';
 
 export default {
 
-  created() {
-
-  },
+  mixins: [LaunchesMixin],
 
   async mounted() {
     this.setLaunchesAsPageTitle();
@@ -145,26 +144,6 @@ export default {
 
   data() {
     return {
-      isCompletedLaunches: true,
-      scrollPaginationCurrentCounter: 1,
-      launchesList: [],
-      randomColorArray: [
-        'teal lighten-1',
-        'purple lighten-2',
-        'amber lighten-1',
-        'cyan lighten-1',
-        'red lighten-1',
-        'green lighten-1',
-        'yellow lighten-1',
-        'pink lighten-3',
-        'red lighten-4',
-        'indigo lighten-2',
-        'indigo lighten-1',
-        'blue lighten-1',
-        'indigo lighten-1',
-        'light-blue lighten-1',
-        'teal darken-2',
-      ],
       SPACEX_LAUNCHES_CONSTANTS: Constants.SPACEX_LAUNCHES,
     };
   },
@@ -174,7 +153,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(['setPageTitle', 'setUnLoadingRequest', 'getLaunchesSortedByLaunchDateDesc']),
+    ...mapActions(['setPageTitle']),
 
     findEvenOdd(index) {
       return index % 2 === 0;
@@ -184,53 +163,22 @@ export default {
       this.setPageTitle(this.SPACEX_LAUNCHES_CONSTANTS);
     },
 
-    getRandormColor() {
-      return this.randomColorArray[random(this.randomColorArray.length - 1)];
-    },
-
     isEmpty(details) {
       return isEmpty(details);
     },
 
-    async loadAllSpaceXLaunchesSortedByLaunchDateDesc() {
-      const launchesResponse = await this.getLaunchesSortedByLaunchDateDesc(
-        {
-          isCompletedLaunches: this.isCompletedLaunches,
-          paginationCounter: this.scrollPaginationCurrentCounter,
-        },
-      );
-
-      console.log('******** Existing list size ******* :', this.launchesList);
-      console.log('******** launchesResponse ******* :', launchesResponse);
-      if (!isEmpty(launchesResponse)) {
-        (this.launchesList).push(...launchesResponse
-          .map((launch) => ({
-            id: launch.id,
-            flight_number: launch.flight_number,
-            name: launch.name,
-            date: launch.date_local,
-            upcoming: launch.upcoming,
-            success: launch.success,
-            links: launch.links,
-            details: launch.details,
-            color: this.getRandormColor(),
-            rocket: launch.rocket,
-            crew: launch.crew,
-          })));
-      }
-      console.log('****** launchesList Transformed **** : ', this.launchesList);
-      this.setUnLoadingRequest();
-    },
   },
 
   watch: {
 
-    isCompletedLaunches() {
+    isCompletedLaunches(newProps) {
       console.log('****** Watch  isCompletedLaunches **** : ');
       this.launchesList = [];
+      this.scrollPaginationCurrentCounter = newProps ? 1 : 0;
       this.loadAllSpaceXLaunchesSortedByLaunchDateDesc();
     },
 
   },
+
 };
 </script>
