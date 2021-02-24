@@ -85,17 +85,16 @@ export default {
           backgroundColorArray.push(this.getRandormColor(this.randomColorForChart));
         }
 
-        const initObject = { labels: [...charLabelArray] };
-        // this.$set(initObject, 'labels', charLabelArray);
-        const initialDataSet = { label: `Launch per rocket for ${this.isCompletedLaunches}` ? 'Past Launches' : 'Upcoming Launches' };
+        const initiChartObject = { labels: charLabelArray };
+        const initialChartDataSet = { label: this.isCompletedLaunches ? 'Past Launches' : 'Upcoming Launches' };
         const prepareDatasetsObject = {
-          ...initialDataSet,
-          backgroundColor: [...backgroundColorArray],
-          data: [...Object.values(grouped).map((launch) => launch.length)],
+          ...initialChartDataSet,
+          backgroundColor: backgroundColorArray,
+          data: Object.values(grouped).map((launch) => launch.length),
         };
 
         return {
-          ...initObject,
+          ...initiChartObject,
           datasets: [prepareDatasetsObject],
         };
       }
