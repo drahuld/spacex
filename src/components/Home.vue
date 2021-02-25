@@ -11,16 +11,17 @@
         <v-card
           elevation="24"
           height="500" width="500">
-          <v-row class="fill-height" align="center" justify="center">
+          <v-card-title class="justify-center">Launches Count Per Rocket</v-card-title>
+          <v-row class="fill-height aligGraph" align="center" justify="center">
             <PieChart
               v-if="calculatePieChartForRocketLaunchesData != null"
-              :chartData="calculatePieChartForRocketLaunchesData"
-          /></v-row>
+              :chartData="calculatePieChartForRocketLaunchesData"/></v-row>
         </v-card>
       </v-col>
       <v-col cols="auto">
         <v-card elevation="24" height="500" width="500">
-          <v-row class="fill-height" align="center" justify="center"
+          <v-card-title class="justify-center">Launches Count Per Launch-Pads</v-card-title>
+          <v-row class="fill-height aligGraph" align="center" justify="center"
             ><BarChart
               v-if="calculateBarChartForLaunchPadsLaunchesData != null"
               :chartData="calculateBarChartForLaunchPadsLaunchesData"
@@ -29,6 +30,7 @@
       </v-col>
     </v-row>
     <v-card elevation="24" style="margin-top: 20px">
+      <v-card-title class="justify-center">Launches/Rockets By Year</v-card-title>
             <BarChart
               v-if="calculateBarChartForLaunchesPerYearData != null"
               :chartData="calculateBarChartForLaunchesPerYearData"/>
@@ -284,4 +286,8 @@ export default {
 };
 </script>
 <style scoped>
+
+.aligGraph{
+  margin-top: -40px;
+}
 </style>

@@ -17,18 +17,12 @@
         ></v-img>
       </template>
 
-      <v-app-bar-nav-icon></v-app-bar-nav-icon>
-
-      <v-toolbar-title>{{ headerProps.name }}</v-toolbar-title>
+      <v-toolbar-title style="font-size: 40px">{{ headerProps.name }} Insights</v-toolbar-title>
 
       <v-spacer></v-spacer>
 
       <v-btn icon>
         <v-icon>mdi-magnify</v-icon>
-      </v-btn>
-
-      <v-btn icon>
-        <v-icon>mdi-heart</v-icon>
       </v-btn>
 
       <v-menu bottom left>
