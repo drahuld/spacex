@@ -22,6 +22,16 @@ Vue.filter('format_Date_dd_mm_yyyy', (value) => {
 });
 
 /**
+ * Date vMMue filter. This filter format the date to format_Date_yyyy format.
+ */
+Vue.filter('format_Date_yyyy', (value) => {
+  if (value) {
+    return moment(String(value)).format('YYYY');
+  }
+  return value;
+});
+
+/**
  * Date vMMue filter. This filter format the date to DD.MM.YYYY hh:mm format.
  */
 Vue.filter('toUppercase', (value) => {

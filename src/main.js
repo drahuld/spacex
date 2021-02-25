@@ -25,6 +25,15 @@ Vue.mixin({
   },
 });
 
+Vue.prototype.$forceCompute = function (computedName, forceUpdate /* default: true */) {
+  // eslint-disable-next-line no-underscore-dangle
+  if (this._computedWatchers[computedName]) {
+    // eslint-disable-next-line no-underscore-dangle
+    this._computedWatchers[computedName].run();
+    if (forceUpdate || typeof forceUpdate === 'undefined') this.$forceUpdate();
+  }
+};
+
 new Vue({
   router,
   store,

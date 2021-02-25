@@ -28,18 +28,18 @@ export default {
         'teal darken-2',
       ],
       randomColorForChart: [
-        '#F44336',
         '#E91E63',
+        '#2196F3',
+        '#4CAF50',
         '#9C27B0',
         '#673AB7',
         '#3F51B5',
-        '#2196F3',
         '#03A9F4',
         '#03A9F4',
         '#009688',
-        '#4CAF50',
         '#8BC34A',
         '#CDDC39',
+        '#F44336',
         '#FFEB3B',
         '#FFC107',
         '#FF9800',
@@ -84,6 +84,7 @@ export default {
             color: this.getRandormColor(this.randomColorArray),
             rocket: launch.rocket,
             crew: launch.crew,
+            launchpad: launch.launchpad,
           })));
         this.isChartDataLoaded = true;
       }

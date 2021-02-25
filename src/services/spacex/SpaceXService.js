@@ -35,11 +35,12 @@ const SpaceXService = {
         page: paginationCounter,
         pagination: (paginationCounter > 0),
         sort: {
-          date_local: 'desc',
+          date_utc: 'desc',
         },
         populate: [
           'rocket',
           'crew',
+          'launchpad',
         ],
       },
     };

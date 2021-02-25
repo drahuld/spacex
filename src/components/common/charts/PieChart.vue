@@ -4,7 +4,7 @@ import { Pie } from 'vue-chartjs';
 
 export default {
 
-  mixins: [Pie],
+  extends: Pie,
 
   props: {
 
@@ -12,7 +12,6 @@ export default {
       type: Object,
       required: true,
     },
-
   },
 
   data: () => ({
@@ -28,10 +27,8 @@ export default {
   },
 
   watch: {
-
-    chartData(newVal, oldVal) { // watch it
-      console.log('Prop changed: ', newVal, ' | was: ', oldVal);
-      this.renderChart(this.chartData, this.options);
+    chartData(newValue) {
+      this.renderChart(newValue, this.options);
     },
   },
 

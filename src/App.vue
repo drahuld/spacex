@@ -16,11 +16,11 @@
         style="align-items: flex-center"
         fill-height
         justify-center>
-            <transition name="fade">
-              <v-card :shaped="pageTitle === SPACEX_HOME_CONSTANTS ? true : false"
+            <transition name="fade" v-if="pageTitle !== SPACEX_HOME_CONSTANTS">
+              <v-card
               :width="pageTitle === SPACEX_HOME_CONSTANTS ? '60%' : '100%'"
               justify="center" :elevation="24" class="vCardBackgroundCss">
-                <v-img v-if="pageTitle !== SPACEX_HOME_CONSTANTS"
+                <v-img
                   height="200px"
                   :src="getComputedPop">
                   <v-app-bar flat color="rgba(0, 0, 0, 0)">
@@ -35,6 +35,9 @@
                 </v-img>
                 <router-view></router-view>
               </v-card>
+            </transition>
+            <transition name="fade" v-else  >
+                <router-view></router-view>
             </transition>
 
       </v-container>
