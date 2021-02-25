@@ -138,11 +138,13 @@ export default {
               }
             });
 
-            datasets.push({
-              label: 'Launches Failure',
-              backgroundColor: '#9C27B0',
-              data: this.filterLaunchesFailureByYear(yearRangeArray),
-            });
+            if (this.isCompletedLaunches) {
+              datasets.push({
+                label: 'Launches Failure',
+                backgroundColor: '#9C27B0',
+                data: this.filterLaunchesFailureByYear(yearRangeArray),
+              });
+            }
 
             return {
               labels: yearRangeArray,
