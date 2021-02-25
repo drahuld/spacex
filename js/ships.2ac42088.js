@@ -1,2 +1,2 @@
 (window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["ships"],{fa80:function(t,e,i){"use strict";i.r(e);var s=function(){var t=this,e=t.$createElement,i=t._self._c||e;return i("div",[t._v(" This is Ships .... ")])},n=[],a=i("5530"),S=i("2f62"),c=i("5a50"),u={data:function(){return{SPACEX_SHIPS_CONSTANTS:c["a"].SPACEX_SHIPS}},mounted:function(){this.setShipAsPageTitle()},methods:Object(a["a"])(Object(a["a"])({},Object(S["b"])(["setPageTitle"])),{},{setShipAsPageTitle:function(){this.setPageTitle(this.SPACEX_SHIPS_CONSTANTS)}})},l=u,o=i("2877"),h=Object(o["a"])(l,s,n,!1,null,null,null);e["default"]=h.exports}}]);
-//# sourceMappingURL=ships.f6cfb89f.js.map
+//# sourceMappingURL=ships.2ac42088.js.map
